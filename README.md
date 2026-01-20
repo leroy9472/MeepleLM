@@ -6,7 +6,7 @@
 </div>
 
 <p align="center">
-  <img src="./assets/overview.pdf" alt="MeepleLM Framework Overview" width="850"/>
+  <img src="./assets/overview.png" alt="MeepleLM Framework Overview" width="850"/>
 </p>
 
 <p align="center">
