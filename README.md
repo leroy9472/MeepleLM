@@ -65,20 +65,17 @@ Experiments demonstrate that MeepleLM significantly outperforms latest commercia
 We provide the complete pipeline data, from raw sources to instruction-tuning ready files.
 
 * **`data/metadata/`**:
-* `game_info`: Mappings of Game ID to metadata (Name, Rank, Weight, Year).
-* `test_games_list.json`: The official evaluation split (207 games) used in the paper.
-
+  * `game_info.json`: Mappings of Game ID to metadata (Name, Rank, Weight, Year).
+  * `test_games_list.json`: The official evaluation split (207 games) used in the paper.
 
 * **`data/finetuning/`**: Ready-to-use **Alpaca format** datasets for SFT. Each folder contains `_train.json` and `_test.json`.
-* `MeepleLM/`: Full dataset with MDA CoT reasoning chains.
-* `wo_MDA/`: Ablation without reasoning chains.
-* `wo_Persona/`: Ablation without persona profiles.
-* `wo_Rulebook/`: Ablation without rule context.
-
+  * `MeepleLM/`: Full dataset with MDA CoT reasoning chains.
+  * `wo_MDA/`: Ablation without reasoning chains.
+  * `wo_Persona/`: Ablation without persona profiles.
+  * `wo_Rulebook/`: Ablation without rule context.
 
 * **`data/rulebooks/`**: The corpus of 1,727 processed rulebooks in Markdown format.
 * **`data/reviews/`**: The filtered high-quality review corpus used to construct the training data.
-
 ---
 
 ### 🤖 Models & Checkpoints
