@@ -80,7 +80,7 @@ We provide the complete pipeline data, from raw sources to instruction-tuning re
 
 ### 🤖 Models & Checkpoints
 
-We provide **LoRA adapters** trained on Qwen3-8B. These can be loaded easily using [vLLM](https://docs.vllm.ai/).
+We provide **LoRA adapters** trained on [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B). These can be loaded easily using [vLLM](https://docs.vllm.ai/).
 
 | Model Variant | Description | Path |
 | --- | --- | --- |
@@ -111,7 +111,7 @@ All models were trained using the **[LLaMA-Factory](https://github.com/hiyouga/L
 To reproduce the training process:
 
 1. **Install LLaMA-Factory:**
-Please refer to the [official LLaMA-Factory repository](https://github.com/hiyouga/LLaMA-Factory) for installation instructions.
+Please refer to the official repository] for installation instructions.
 2. **Register Datasets:**
 Add the paths from `data/finetuning/` to LLaMA-Factory's `data/dataset_info.json`.
 3. **Run Training:**
