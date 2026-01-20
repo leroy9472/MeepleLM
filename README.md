@@ -32,8 +32,13 @@
 
 ### 📜 Abstract
 
-> Recent advancements have expanded the role of Large Language Models in board games from playing agents to creative co-designers. However, a critical gap remains: current systems lack the capacity to offer constructive critique grounded in the emergent user experience. To bridge this gap, we introduce **MeepleLM**, a virtual playtester that simulates diverse subjective experiences. We curated a dataset of **1,727 structurally corrected rulebooks** and **150K reviews** selected via quality scoring. We augment this data with **Mechanics-Dynamics-Aesthetics (MDA)** reasoning chains to explicitly recover the latent dynamics connecting written rules to player satisfaction. Furthermore, we distill five distinct player personas (e.g., *System Purist*, *Social Lubricator*) to model subjective heterogeneity.
-
+> Recent advancements have expanded the role of Large Language Models in board games from playing agents to creative co-designers.
+However, a critical gap remains: current systems lack the capacity to offer constructive critique grounded in the emergent user experience.
+Bridging this gap is fundamental for harmonizing *Human-AI collaboration*, as it empowers designers to refine their creations via external perspectives while steering models away from biased or unpredictable outcomes.
+Automating critique for board games presents two challenges: inferring the *latent dynamics* connecting rules to gameplay without an explicit engine, and modeling the *subjective heterogeneity* of diverse player groups.
+To address these, we curate a dataset of 1,727 structurally corrected rulebooks and 150K reviews selected via quality scoring and facet-aware sampling. We augment this data with *Mechanics-Dynamics-Aesthetics (MDA)* reasoning to explicitly bridge the causal gap between written rules and player experience.
+We further distill player personas and introduce **MeepleLM**, a specialized model that internalizes persona-specific reasoning patterns to accurately simulate the subjective feedback of diverse player archetypes.
+Experiments demonstrate that MeepleLM significantly outperforms latest commercial models (e.g., GPT-5.1, Gemini3-Pro) in community alignment and critique quality, achieving a 70% preference rate in user studies assessing utility. MeepleLM serves as a reliable *virtual playtester* for general interactive systems, marking a pivotal step towards audience-aligned, experience-aware Human-AI collaboration.
 ---
 
 ### 📂 File Structure
@@ -43,13 +48,13 @@
 ├── assets/                    # Project images and figures
 ├── data/
 │   ├── metadata/              # Meta-info (Game IDs, names, BGG stats, splits)
-│   ├── finetuning/            # Alpaca-formatted datasets for training/testing
-│   ├── reviews/               # Raw and filtered review data
+│   ├── finetuning/            # Alpaca-formatted datasets
+│   ├── reviews/               # Filtered review data
 │   └── rulebooks/             # Structured Markdown rulebooks
 ├── checkpoints/               # LoRA adapters for MeepleLM & Ablations
 ├── training/                  # YAML configurations for LLaMA-Factory
 ├── inference/                 # Inference scripts (vLLM example)
-└── results/                   # Generated critiques and evaluation outputs
+└── results/                   # Generated critiques
 
 ```
 
@@ -60,15 +65,15 @@
 We provide the complete pipeline data, from raw sources to instruction-tuning ready files.
 
 * **`data/metadata/`**:
-* `game_info.json`: Mappings of Game ID to metadata (Name, Rank, Weight, Year).
+* `game_info`: Mappings of Game ID to metadata (Name, Rank, Weight, Year).
 * `test_games_list.json`: The official evaluation split (207 games) used in the paper.
 
 
 * **`data/finetuning/`**: Ready-to-use **Alpaca format** datasets for SFT. Each folder contains `_train.json` and `_test.json`.
 * `MeepleLM/`: Full dataset with MDA CoT reasoning chains.
-* `wo_MDA/`: Ablation without reasoning chains (Direct generation).
+* `wo_MDA/`: Ablation without reasoning chains.
 * `wo_Persona/`: Ablation without persona profiles.
-* `wo_Rulebook/`: Ablation without rule context (Parametric knowledge only).
+* `wo_Rulebook/`: Ablation without rule context.
 
 
 * **`data/rulebooks/`**: The corpus of 1,727 processed rulebooks in Markdown format.
@@ -78,7 +83,7 @@ We provide the complete pipeline data, from raw sources to instruction-tuning re
 
 ### 🤖 Models & Checkpoints
 
-We provide **LoRA adapters** trained on **Qwen2.5-7B-Instruct** (referred to as Qwen3-8B in the paper context). These can be loaded easily using [vLLM](https://docs.vllm.ai/).
+We provide **LoRA adapters** trained on Qwen3-8B. These can be loaded easily using [vLLM](https://docs.vllm.ai/).
 
 | Model Variant | Description | Path |
 | --- | --- | --- |
@@ -92,7 +97,7 @@ We provide **LoRA adapters** trained on **Qwen2.5-7B-Instruct** (referred to as 
 You can serve the model with the LoRA adapter enabled. For example, to serve MeepleLM:
 
 ```bash
-vllm serve Qwen/Qwen2.5-7B-Instruct \
+vllm serve Qwen/Qwen3-8B \
     --enable-lora \
     --lora-modules MeepleLM=checkpoints/MeepleLM \
     --served-model-name MeepleLM \
@@ -123,14 +128,14 @@ llamafactory-cli train training/train_meeplelm.yaml
 
 ---
 
-### ⚡ Inference & Evaluation
+### ⚡ Inference
 
-The `inference/` directory contains scripts to generate virtual playtest reports.
+The `inference/` directory contains scripts to generate virtual playtest results.
 
 * **`playtest_inference.py`**: A sample script designed to work with the **MeepleLM** checkpoint served via vLLM. It iterates through the test set games, applying the Persona constraints to generate reviews.
 * **`results/`**: Stores the output JSON files generated by the model (e.g., `results/inference_meeplelm/`).
 
-> **Note:** The provided inference script is configured for the **MeepleLM** LoRA adapter and local vLLM server. If you wish to evaluate other models (e.g., GPT-4o, Claude) or use different API endpoints, please modify the `API_URL` and `MODEL_NAME` parameters in the script accordingly.
+> **Note:** The provided inference script is configured for the **MeepleLM** LoRA adapter and local vLLM server. If you wish to evaluate other models or use different API endpoints, please modify the `API_URL` and `MODEL_NAME` parameters in the script accordingly.
 
 ---
 
